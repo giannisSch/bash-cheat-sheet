@@ -1,0 +1,472 @@
+#!/bin/bash
+
+##############################################################################
+# BASH BASICS
+##############################################################################
+
+# Absolute vs Relative path
+An absolute path always begins with a slash (/), which denotes the root of the directory hierarchy.
+A relative path identifies the location of a file or directory in relation to the current directory.
+
+$PATH 		   # One special variable is PATH which sets where can I find executable programs, so I can type them without using absolute path.
+
+Modify $PATH:
+If you want the shell to look in the current directory, then add a . at the end of your $PATH. So export PATH=$PATH:.
+In order to use add new directory into $PATH then use ':' + directory path: example : export PATH=/opt/eda/mentor/questasim/bin:$PATH
+
+env                 # displays all environment variables
+
+echo $SHELL         # displays the shell you're using
+echo $BASH_VERSION  # displays bash version
+
+bash                # if you want to use bash (type exit to go back to your previously opened shell)
+whereis bash        # locates the binary, source and manual-page for a command
+which bash          # finds out which program is executed as 'bash' (default: /bin/bash, can change across environments)
+clear               # clears content on window (hide displayed lines)
+
+source ./file	    # source file, force script file to run in the same shell; this is called sourcing a script
+. ./file	    # source file, same as source ./file
+./file		    # execute file in a new shell
+bash file	    # execute file with bash, same as ./file
+
+Sourcing a script will run the commands in the current shell process.
+Executing a script will run the commands in a new shell process.
+
+##############################################################################
+# FILE COMMANDS
+##############################################################################
+
+
+ls                            # lists your files in current directory, ls <dir> to print files in a specific directory
+ls -l                         # lists your files in 'long format', which contains the exact size of the file, who owns the file and who has the right to look at it, and when it was last modified
+ls -a                         # lists all files in 'long format', including hidden files (name beginning with '.')
+ln <filename> <link>          # creates hard link to file
+ln -s <filename> <link>       # creates symbolic link to file
+touch <filename>              # creates or updates (edit) your file
+cat <filename>                # prints file raw content (will not be interpreted)
+tac <filename>		      # print file backwards (cat backwards)
+any_command > <filename>      # '>' is used to perform redirections, it will set any_command's stdout to file instead of "real stdout" (generally /dev/stdout)
+more <filename>               # shows the first part of a file (move with space and type q to quit)
+head <filename>               # outputs the first lines of file (default: 10 lines)
+head -20 <filename>	      # outputs first 20 lines
+tail <filename>               # outputs the last lines of file (useful with -f option) (default: 10 lines)
+vim <filename>                # opens a file in VIM (VI iMproved) text editor, will create it if it doesn't exist
+which <filename>	      # return the pathnames of the files which will be executed in the current enviroment
+mv <filename1> <dest>         # moves a file to destination, behavior will change based on 'dest' type (dir: file is placed into dir; file: file will replace dest (tip: useful for renaming))
+cp <filename1> <dest>         # copies a file
+rm <filename>                 # removes a file
+find . -name <name> <type>    # searches for a file or a directory in the current directory and all its sub-directories by its name. We can use wildcards. We must use double quotes for the pattern.
+diff <filename1> <filename2>  # compares files, and shows where they differ. Special Symbols a : add, c : change, d : delete
+du [OPTION]... [FILE]...      # estimate file space usage	
+wc <filename>                 # tells you how many lines, words and characters there are in a file. Use -lwc (lines, word, character) to ouput only 1 of those informations
+sort <filename>               # sorts the contents of a text file line by line in alphabetical order, use -n for numeric sort and -r for reversing order.
+sort -t -k <filename>         # sorts the contents on specific sort key field starting from 1, using the field separator t.
+uniq			      # can delete duplicates from a sorted list. So first you need to sort it
+chmod -options <filename>     # lets you change the read, write, and execute permissions on your files (more infos: SUID, GUID)
+free			      # displays the total amount of free space available along with the amount of memory used and swap memory in the system, and also the buffers used by the kernel.
+who			      # who is logged in your system
+man <command>		      # show the manual for specified command. Type "/" to search. Press "n" to go forword
+tar cvf filename.tar directory    # Create a new tar archive with the contents of a given directory
+tar tvf filename.tar		  # List the contents of an archive, without extracting
+tar xvf filename.tar		  # Extract archive
+tar cvfz filename.tar directory	  # with "z" (un)compress with gzip command
+tar cvfj filename.tar		  # with "j" (un)compress with bzip2
+gzip <filename>               # compresses files using gzip algorithm
+gunzip <filename>             # uncompresses files compressed by gzip
+bzip <filename>               # compresses files using bzip algorithm(better than gzip)
+bunzip <filename>             # uncompresses files compressed by bzip
+gzcat <filename>              # lets you look at gzipped file without actually having to gunzip it
+genscript                     # converts plain text files into postscript for printing and gives you some options for formatting
+dvips <filename>              # prints .dvi files (i.e. files produced by LaTeX)
+grep <pattern> <filenames>    # looks for the string in the files
+grep -r <pattern> <dir>       # search recursively for pattern in directory
+grep -i 		      # ignore case
+grep -v                       # inverse operation, show lines not containing pattern
+grep -l                       # do not show normal output, but filenames
+
+cut -d<delimiter> -f<comma-separated fields> filename      # used to output selected columns from a column-formatted file
+alias newName=oldNameOrCommand     			   # create an easier to remember name for an existing command
+unalias newTarget	      # release the alias
+set 			      # display a list of environment variables
+unset			      # remove a variable from your shell enviroment
+set -x 			      # display shell expantions
+set +x			      # stop display shell expantions
+tr 			      # translate characters
+sed			      # stream editor
+sed `s/word1/word2/g'         # global replacement of word1 with word2, if we use only `s` then it will replace only the first appereance in each line
+date		  	      # can display the date, time, time zone, use + to format
+sleep -n		      # wait for n seconds
+time <command>		      # display how long it takes to execute a command	
+tr 'chars' 'newChars'	      # translate or delete characters
+awk
+cat <filename> | awk '{print "something "$1" something else"$5}'		# it is like "cut", return 1st and 5th field for each line 
+											if this field are separated with blank or tab
+										**awk -F':' '{ print $1 }' /etc/passwd** where -F the field separator 
+
+															 	
+xargs			      # build and execute command lines from standard input.  
+				Reads items from standard input as separated by blanks and executes a command once for each argument. 
+				In the following example standard input is piped to xargs and the mkdir command is run for each argument, creating three folders.
+				*******
+				echo 'one two three' | xargs mkdir
+				ls
+				one two three
+				****
+
+				Example 2:
+				find . -name ncsim.log | xargs grep "DUT errors"  # files pass not as standard input of grep command, but as arguments to grep command
+
+##############################################################################
+# FILE PERMISSIONS
+##############################################################################
+
+
+The users and groups of a system can be locally managed in /etc/passwd and /etc/group
+
+chgrp newGroupOwner <filename>     # change the group owner of a file, we can use wildcars also
+chown newOwner <filename>	   # change owner of file
+
+Example:
+-rwxr-xr--
+
+	Permissions position:
+	1 - special file type
+	2-4 rwx permissions for the user owner
+	5-7 r-x permissions for the group owner
+	8-10 r-- permissions for others
+
+	Unix special files (1s positions)
+	- normal file
+	d directory
+	l symbolic link
+	p named pipe
+	b block device
+	c character device
+	s socket
+
+## chmod			# change permissions
+chmod u+x file.txt		# give user owner execute permission	
+chmod g-r file.txt 		# removes the group owners read permission
+chmod a+w file.txt		# gives all them write permission
+chmod +w file.txt		# same as chmod a+w
+chmod u=rw,g=rw,o=r file.txt	# give explicit permissions -rw-rw-r---	
+chmod u=rwx,ug+rw,o=r file.txt  # fishy combination -rwxrw-r-- 
+f
+binary octal permission
+	000 0 ---
+	001 1 --x
+	010 2 -w
+	011 3 -wx
+	100 4 r--
+	101 5 r-x
+	110 6 rw
+	111 7 rwx
+
+	chmod 777 file.txt	#-rwxrwxrwx
+	chmod 654 file.txt	#-rw-r-xr--
+
+##############################################################################
+# DIRECTORY COMMANDS
+##############################################################################
+
+
+mkdir <dirname>               # makes a new directory
+rmdir <dirname>               # remove an empty directory
+rmdir -rf <dirname>           # remove a non-empty directory
+mv <dir1> <dir2>              # rename a directory from <dir1> to <dir2>
+cd                            # changes to home
+cd ..                         # changes to the parent directory
+cd <dirname>                  # changes directory
+cp -r <dir1> <dir2>           # copy <dir1> into <dir2> including sub-directories
+pwd                           # tells you where you currently are
+
+
+##############################################################################
+# VARIABLES
+##############################################################################
+
+$HOME
+$USER
+$PATH			 # determines where the shell is looking for commands to execute 
+$PWD
+$HOSTNAME
+$EDITOR
+$SHELL
+
+On-the fly variables, used in scripts:
+
+$0		the name a script is called with
+$1 $2...	first, second... arguments passed to a script
+$#		number of arguments passed to a script
+$?		exit value: =0 means success, <>0 means error
+$$		process id of script execution. Useful to create temporary files/directories
+
+
+varname=value                # defines a variable
+varname=value command        # defines a variable to be in the environment of a particular subprocess
+echo $varname                # checks a variable's value
+echo $$                      # prints process ID of the current shell
+echo $!                      # prints process ID of the most recently invoked background job
+echo $?                      # displays the exit status of the last command
+read <varname>               # reads a string from the input and assigns it to a variable 
+let <varname> = <equation>   # performs mathematical calculation using operators like +, -, *, /, %
+export VARNAME=value         # defines an environment variable (will be available in subprocesses)
+				means that the variable name is available to any process you run from that shell process
+
+
+$(command)      	     # Command substitution 
+`command`		     # Command substitution ` is the button above tab 		
+$((expression))		     # Simple arithmetics on variables 
+
+##############################################################################
+# FUNCTIONS
+##############################################################################
+
+
+# The function refers to passed arguments by position (as if they were positional parameters), that is, $1, $2, and so forth.
+# $@ is equal to "$1" "$2"... "$N", where N is the number of positional parameters. $# holds the number of positional parameters.
+
+
+function functname() {
+  shell commands
+}
+
+In order to call the function just type it's name
+functname
+If we want to pass some arguments in order to call:
+fuctname arg1 arg2
+
+If you use variable in your function, remember to make it a local variable.
+
+unset -f functname  # deletes a function definition
+declare -f          # displays all defined functions in your login session
+
+
+##############################################################################
+# FLOW CONTROLS
+##############################################################################
+
+
+statement1 && statement2  # and operator
+statement1 || statement2  # or operator
+
+-a                        # and operator inside a test conditional expression
+-o                        # or operator inside a test conditional expression
+
+# STRINGS
+
+str1 == str2               # str1 matches str2
+str1 != str2               # str1 does not match str2
+str1 < str2                # str1 is less than str2 (alphabetically)
+str1 > str2                # str1 is greater than str2 (alphabetically)
+str1 \> str2               # str1 is sorted after str2
+str1 \< str2               # str1 is sorted before str2
+-n str1                    # str1 is not null (has length greater than 0)
+-z str1                    # str1 is null (has length 0)
+
+# FILES
+
+-a file                   # file exists or its compilation is successful
+-d file                   # file exists and is a directory
+-e file                   # file exists; same -a
+-f file                   # file exists and is a regular file (i.e., not a directory or other special type of file)
+-r file                   # you have read permission
+-s file                   # file exists and is not empty
+-w file                   # your have write permission
+-x file                   # you have execute permission on file, or directory search permission if it is a directory
+-N file                   # file was modified since it was last read
+-O file                   # you own file
+-G file                   # file's group ID matches yours (or one of yours, if you are in multiple groups)
+file1 -nt file2           # file1 is newer than file2
+file1 -ot file2           # file1 is older than file2
+
+# NUMBERS
+
+-lt                       # less than
+-le                       # less than or equal
+-eq                       # equal
+-ge                       # greater than or equal
+-gt                       # greater than
+-ne                       # not equal
+
+if [ condition ]
+then
+  statements
+elif [ condition ]
+  then statements...
+else
+  statements
+fi
+
+for x in {1..10}
+do
+  statements
+done
+
+for name [in list]
+do
+  statements that can use $name
+done
+
+for (( initialisation ; ending condition ; update ))
+do
+  statements...
+done
+
+case expression in
+  pattern1 )
+    statements ;;
+  pattern2 )
+    statements ;;
+esac
+
+select name [in list]
+do
+  statements that can use $name
+done
+
+while condition; do
+  statements
+done
+
+until condition; do
+  statements
+done
+
+##############################################################################
+# COMMAND-LINE PROCESSING CYCLE
+##############################################################################
+
+
+# The default order for command lookup is functions, followed by built-ins, with scripts and executables last.
+# There are three built-ins that you can use to override this order: `command`, `builtin` and `enable`.
+
+command  # removes alias and function lookup. Only built-ins and commands found in the search path are executed
+builtin  # looks up only built-in commands, ignoring functions and commands found in PATH
+enable   # enables and disables shell built-ins
+
+eval     # takes arguments and run them through the command-line processing steps all over again
+
+
+##############################################################################
+# INPUT/OUTPUT REDIRECTORS
+##############################################################################
+
+
+cmd1|cmd2  # pipe; takes standard output of cmd1 as standard input to cmd2
+< file     # takes standard input from file
+> file     # directs standard output to file
+>> file    # directs standard output to file; append to file if it already exists
+>|file     # forces standard output to file even if noclobber is set
+2> file    # directs standard error to file
+> file 2>&1  $ directs standard output error to the same file 
+n>|file    # forces output to file from file descriptor n even if noclobber is set
+<> file    # uses file as both standard input and standard output
+n<>file    # uses file as both input and output for file descriptor n
+n>file     # directs file descriptor n to file
+n<file     # takes file descriptor n from file
+n>>file    # directs file description n to file; append to file if it already exists
+n>&        # duplicates standard output to file descriptor n
+n<&        # duplicates standard input from file descriptor n
+n>&m       # file descriptor n is made to be a copy of the output file descriptor
+n<&m       # file descriptor n is made to be a copy of the input file descriptor
+&>file     # directs standard output and standard error to file
+<&-        # closes the standard input
+>&-        # closes the standard output
+n>&-       # closes the ouput from file descriptor n
+n<&-       # closes the input from file descripor n
+
+##############################################################################
+# PROCESS HANDLING
+##############################################################################
+
+# To suspend a job, type CTRL+Z while it is running. You can also suspend a job with CTRL+Y.
+# This is slightly different from CTRL+Z in that the process is only stopped when it attempts to read input from terminal.
+# Of course, to interrupt a job, type CTRL+C.
+
+myCommand &  # runs job in the background and prompts back the shell
+
+jobs         # lists all jobs (use with -l to see associated PID)
+
+kill -l               # returns a list of all signals on the system, by name and number
+kill PID              # terminates process with specified PID
+kill -s SIGKILL 4500  # sends a signal to force or terminate the process
+kill -15 913          # Ending PID 913 process with signal 15 (TERM)
+kill %1               # Where %1 is the number of job as read from 'jobs' command.
+
+ps           # prints a line of information about the current running login shell and any processes running under it
+ps -a        # selects all processes with a tty except session leaders
+ps- ef	     # show all running processes
+
+id 	              # shows users id
+who                   # who is logged in the system
+ 
+trap cmd sig1 sig2  # executes a command when a signal is received by the script
+trap "" sig1 sig2   # ignores that signals
+trap - sig1 sig2    # resets the action taken when the signal is received to the default
+
+disown <PID|JID>    # removes the process from the list of jobs
+
+wait                # waits until all background jobs have finished
+
+##############################################################################
+# FILE GLOPPING (or dynamic filename generation), Used specily with "ls, find" command 
+##############################################################################
+
+*	# any combination of characters (even none)
+?	# exactly one character
+[a-z]   # one character between this scope, same [0-9]
+[ab]    # a OR b, one character
+[!a]    # one characters except "a"
+
+##############################################################################
+# Regular Expressions, used with specilly with "grep" command
+##############################################################################
+
+3 differents versions
+BRE: Basic Regular Expressions	
+ERE: Extended Regular Expressions  
+PRCE: Perl Regular Expressions
+
+## grep
+	the grep tool has the -E option to force a string to be read as ERE while -G
+	forces BRE and -P forces PRCE
+-E same as "egrep"
+
+	
+(Single letter)		grep u name.txt			# returns all lines which include u 
+(String)		grep ia name.txt		# return all lines which include ia
+(any character)		grep .C name.txt		# return all line with any character and C 
+(OR)			grep -E 'i|a' name.txt		# return lines containing the letter i or the letter a(pipe symbol used for OR). We must specify the version of Regular Expression
+								if we use BRE we must put escape character 'i\|a'/ Perl has same syntax as Extended
+(zero one or more)	grep -E 'o*' name.txt		# The * signifies zero, one or more occurences of the previous('o')
+(one or more)		grep -E 'o+' list2		# The + signifies one or more of the previous
+(End of String) 	grep a$ name			# The $ signifies the end of string
+(start of a string)	grep ^Val name			# The ^ signifies the start of string
+(word separator)	grep '\bover\b'	name		# The \b signifies the word seperator, and means that before and after over is a empty space that means that "over" is a word  
+
+## rename
+	 search for filenames matching a certain string
+	and replacing this string with an other string
+
+(first occurrence replaced)	rename 's/TXT/text/' *		# "s/regex/replacement/" only the first occurrence of "TXT" is replaced by "text" in every file(*) of the folder
+(global replaced)		rename 's/TXT/txt/g' aTXT.TXT	# "s/regex/replacement/g" rename all "TXT" with txt in the file aTXT.TXT
+(case insensitive replace)	rename 's/.text/.txt/i' *	# replace text or Text or TEXT or.. with txt using "i" modifier
+(renaming extensions)		rename 's/.txt$/.TXT/' *.txt	#  only rename the file extension, using "$" becauce $ means end of string in regex
+
+## sed
+	 The stream editor or short sed uses regex for stream editing
+	Used like rename
+
+(example)			 sed -i 's/Sun/Mon/' today	# replace first appereance of Sun with Mon in every line
+
+
+
+
+ 
+	
+
+
+
+
+ 
